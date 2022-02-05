@@ -15,6 +15,7 @@ public class PaintView extends View {
     public ViewGroup.LayoutParams params;
     private Path path = new Path();
     private Paint brush = new Paint();
+    private float w = 8f;
 
     public PaintView(Context context) {
         super(context);
