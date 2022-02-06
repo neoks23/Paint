@@ -1,21 +1,19 @@
 package com.example.paint;
 
 import android.content.res.Resources;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.shapes.Shape;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
+import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity {
 
     private PaintView p;
-    private int i = 1;
+    private int i = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,16 +22,23 @@ public class MainActivity extends AppCompatActivity {
         p = new PaintView(this);
         ConstraintLayout v = findViewById(R.id.content);
         v.addView(p);
-
-
     }
 
-    public void sendMessage(View view) {
-        i++;
+    public void btnUndo(View view){
+        p.Undo();
+    }
+
+    public void btnStrokeWidth(View view) {
+        MaterialButton btn = findViewById(R.id.btnResize);
+        i *= 2;
         p.setStrokeWidth(p.w * i);
 
-        if(i > 3){
-            i = 0;
+        int heightValue = 22;
+        heightValue += p.w * i;
+        btn.setIconSize(heightValue);
+
+        if(i > 8){
+            i = 1;
         }
     }
 }

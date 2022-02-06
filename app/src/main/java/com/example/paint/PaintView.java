@@ -10,25 +10,24 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 public class PaintView extends View {
 
     public ViewGroup.LayoutParams params;
     private Path path = new Path();
     private Paint brush = new Paint();
-    private ArrayList<Path> paths = new ArrayList<Path>();
-    private ArrayList<Paint> brushes = new ArrayList<Paint>();
-    public float w = 8f;
+    private Stack<Path> paths = new Stack<Path>();
+    private  Stack<Paint> brushes = new Stack<Paint>();
+    public float w = 4f;
+    private float currentWidth = 8f;
 
     public PaintView(Context context) {
         super(context);
-        paths.add(path);
-        createNewBrush(true, Color.MAGENTA, Paint.Style.STROKE, Paint.Join.ROUND, 8f);
-
+        createPencil();
         params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -37,6 +36,7 @@ public class PaintView extends View {
 
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:
+                createPencil();
                 path.moveTo(pointX, pointY);
                 return true;
             case MotionEvent.ACTION_MOVE:
@@ -63,13 +63,22 @@ public class PaintView extends View {
         brush.setStyle(style);
         brush.setStrokeJoin(join);
         brush.setStrokeWidth(width);
-        brushes.add(brush);
+        brushes.push(brush);
+    }
+    public void Undo(){
+        if(!brushes.empty()){
+            brushes.pop();
+            paths.pop();
+        }
+        postInvalidate();
+    }
+    public void createPencil(){
+        path = new Path();
+        paths.push(path);
+        createNewBrush(true, Color.MAGENTA, Paint.Style.STROKE, Paint.Join.ROUND, currentWidth);
     }
 
     public void setStrokeWidth(float width){
-        path = new Path();
-        paths.add(path);
-        createNewBrush(true, Color.MAGENTA, Paint.Style.STROKE, Paint.Join.ROUND, width);
-
+        currentWidth = width;
     }
 }
